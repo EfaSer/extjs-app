@@ -1,21 +1,34 @@
 Ext.define("ExtjsApp.view.main.MainWindow", {
   extend: "Ext.container.Viewport",
   xtype: "main",
+  requires: ["ExtjsApp.view.product.ProductTab"],
+  layout: "border",
 
   items: [
     {
-      xtype: "grid",
-      title: "Список товаров",
-      store: {
-        type: "products",
-      },
-      columns: [
-        { text: "ID", dataIndex: "id", flex: 1 },
-        { text: "Имя", dataIndex: "name", flex: 2 },
-        { text: "Описание", dataIndex: "description", flex: 2 },
-        { text: "Цена", dataIndex: "price", flex: 1 },
-        { text: "Кол-во", dataIndex: "quantity", flex: 1 },
+      region: "north",
+      xtype: "toolbar",
+      items: [
+        {
+          text: "Товары",
+          handler: function (btn) {
+            let tabs = btn.up("viewport").down("tabpanel");
+            let newTab = tabs.add({ xtype: "producttab" });
+            tabs.setActiveTab(newTab);
+          },
+        },
+        {
+          text: "Выход",
+          handler: function () {
+            Ext.ComponentQuery.query("viewport")[0].destroy();
+            Ext.create("ExtjsApp.view.login.LoginWindow").show();
+          },
+        },
       ],
+    },
+    {
+      region: "center",
+      xtype: "tabpanel",
     },
   ],
 });
