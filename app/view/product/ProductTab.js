@@ -5,6 +5,7 @@ Ext.define("ExtjsApp.view.product.ProductTab", {
   layout: "fit",
   title: "Товары",
   closable: true,
+  cls: "tab",
   items: [
     {
       xtype: "productgrid",
