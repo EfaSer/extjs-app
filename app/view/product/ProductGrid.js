@@ -25,6 +25,7 @@ Ext.define("ExtjsApp.view.product.ProductGrid", {
                 exactMatch: true,
               });
             }
+            store.loadPage(1);
           }
         },
       },
@@ -49,8 +50,23 @@ Ext.define("ExtjsApp.view.product.ProductGrid", {
                 },
               });
             }
+            store.loadPage(1);
           }
         },
+      },
+    },
+    {
+      text: "Сбросить фильтры",
+      handler: function (btn) {
+        let grid = btn.up("grid");
+        let store = grid.getStore();
+        store.clearFilter();
+        store.loadPage(1);
+
+        let toolbar = grid.down("toolbar");
+        toolbar.query("textfield").forEach(function (field) {
+          field.setValue("");
+        });
       },
     },
   ],
@@ -80,10 +96,25 @@ Ext.define("ExtjsApp.view.product.ProductGrid", {
     },
   ],
 
+  bbar: {
+    xtype: "pagingtoolbar",
+    store: "ProductsStore",
+    displayInfo: true,
+    displayMsg: "Товары {0} - {1} из {2}",
+    emptyMsg: "Нет товаров для отображения",
+  },
+
   listeners: {
+    afterrender: function (grid) {
+      let store = grid.getStore();
+      if (store) {
+        store.loadPage(1);
+      }
+    },
     cellclick: function (_, _, cellIndex, record) {
       if (cellIndex === 1) {
         Ext.create("ExtjsApp.view.product.ProductForm", {
+          title: "Карточка товара: " + record.get("name"),
           record: record,
         }).show();
       }
